@@ -6,6 +6,12 @@ const Playlist = new mongoose.Schema({
     
     owner :{type: mongoose.Types.ObjectId,ref: "user",  },
     songs : [{ type: mongoose.Types.ObjectId , ref : "song" }],
+    collaborators : [
+        {
+            type: mongoose.Types.ObjectId ,  
+            ref:"user",
+        }
+    ]
 })
 
 const Playlistmodel= mongoose.model( 'Playlist',Playlist)
