@@ -24,16 +24,18 @@ router.post('./register',async (req,res)=>{
           username};
      const newUser= await User.create(newUserdata);
 
-     res.status(200).json({
-          message:"user created successfully",
-          data:newUser
-     }
-     )
+
 
 
 
      const token=await gettoken(email,newUser);
+     const userToreturn = {...newUser.toJSON(),token};
+     delete userToreturn.password;
 
+     return res.status(200).json({
+          message:"user created successfully",
+          data:userToreturn
+     });
 
 
 
