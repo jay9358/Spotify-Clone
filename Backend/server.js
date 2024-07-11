@@ -2,6 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const app=express();
 const port = 8000;
+
+app.use(express.json());
+
+const authRoutes= require("./routes/Auth")
 const JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
@@ -48,7 +52,10 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
 app.get("/",(req,res)=>{
     res.send("hello World");
 })
+app.use("/auth",authRoutes);
 
 app.listen(port,(err)=>{
-    if(!err) console.log("Server is running on port 3001")
+    if(!err) console.log("Server is running on port 8000")
 });
+
+

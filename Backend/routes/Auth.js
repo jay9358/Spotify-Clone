@@ -1,12 +1,13 @@
 const express  = require('express');
 const router = express.Router();
 const User  = require("../models/User");
+const bcrypt = require('bcrypt');
 const {getToken}= require("../utils/helpers");
-router.post('./register',async (req,res)=>{
+router.post('/register',async (req,res)=>{
      const {username,firstName,lastName,email,password}= req.body;
 
      //check if user existed throw error if yes
-
+     
      const user =await User.findOne({email:email});
      if(user){
           res.status(403).json({
@@ -28,7 +29,7 @@ router.post('./register',async (req,res)=>{
 
 
 
-     const token=await gettoken(email,newUser);
+     const token=await getToken(email,newUser);
      const userToreturn = {...newUser.toJSON(),token};
      delete userToreturn.password;
 
@@ -41,4 +42,9 @@ router.post('./register',async (req,res)=>{
 
 
 });
+
+router.post('/login', async(req,res)=>{
+
+});
      
+module.exports=router;

@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 // creating mongoose schema
 
 const User = new mongoose.Schema({
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: false },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: false },
     email:{type :String , unique :true}, 
     username: { type: String, required: true },
     likedSongs:{type:String ,default:""},
