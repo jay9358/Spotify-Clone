@@ -2,6 +2,7 @@ const express  = require('express');
 const router = express.Router();
 const User  = require("../models/User");
 const bcrypt = require('bcrypt');
+
 const {getToken}= require("../utils/helpers");
 router.post('/register',async (req,res)=>{
      const {username,firstName,lastName,email,password}= req.body;
@@ -18,6 +19,7 @@ router.post('/register',async (req,res)=>{
      //password change to hash password for security purpose
 
      const hashedPassword = await bcrypt.hash(password,10);
+     console.log(hashedPassword)
      const newUserdata= {email,
           password:hashedPassword,
           firstName,
@@ -44,7 +46,26 @@ router.post('/register',async (req,res)=>{
 });
 
 router.post('/login', async(req,res)=>{
+     const {email,password}=req.body;
+     const user =await User.findOne({email:email});
+     if(!user){
+          return res.status(403).json({err:"Invalid credemtials"});
+     }
+     
+     const ispasswordValid = await bcrypt.compare(password, user.password);
+      if(!ispasswordValid){
+          return res.status(403).json({err:"Invalid credentials pass"})
+     }
 
+     const token = await getToken(user.email,user);
+
+     const userToreturn = {...user.toJSON(),token};
+     delete userToreturn.password;
+
+     return res.status(200).json({
+          message: 'Login successful',
+          data: userToreturn
+      });
 });
      
 module.exports=router;
