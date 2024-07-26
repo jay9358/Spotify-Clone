@@ -26,15 +26,28 @@ router.post("/create",passport.authenticate("jwt",{session:false}),async (req,re
 //if not /playlist we will not know which one is variable for playlist is which is artistId
 
 router.get("/get/playlist/:playlistId",passport.authenticate("jwt",{session:false}),async (req,res)=>{
-    const playlistId = req.params.playlistId;
+    const playlistId = req.params.playlistId;   
     const playlist= await Playlist.findOne({_id:playlistId});
+   
     if(!playlist){
         return res.status(400).json({msg:"Playlist not found not valid Id"});
 
     }
     return res.status(404).json({data:playlist});
 })
-   
+router.get(
+    "/get/me",
+    passport.authenticate("jwt", {session: false}),
+    async (req, res) => {
+        const artistId = req.user._id;
+
+        const playlists = await Playlist.find({owner: artistId}).populate(
+            "owner"
+        );
+        return res.status(200).json({data: playlists});
+    }
+);
+
 
 //get all playlist by an artist
 
@@ -51,29 +64,36 @@ router.get("/get/artist/:artistId",passport.authenticate("jwt",{session:false}),
 
 
 //add song to playlist
-router.post("/get/add/song",passport.authenticate("jwt",{session:false}),async (req,res)=>{
+router.post("/add/song",passport.authenticate("jwt",{session:false}),async (req,res)=>{
   
     const currUser= req.user;
     const {playlistId,songId}= req.body;
-
+     
     const playlist=await Playlist.findOne({_id:playlistId});
 
     if(!playlist){
         return res.status(304).json({msg:"Playlist not found"});
     }
     
-    if(playlist.owner===currUser._id || playlist.collaborators.includes(currUser._id)){
+    if(!playlist.owner.equals(currUser._id) || playlist.collaborators.includes(currUser._id)){
         return res.status(400).json({err:"Not allowed"})
     }
 
     const song = await Song.findOne({_id:songId});
-
+    
     if(!song){
         return res.status(304).json({msg:"Song not found"});
     }
 
     playlist.songs.push(songId);
-    await playlist.save();  //to save our changes in database
+    
+    // Save the updated playlist
+    await playlist.save();
+
+
+
+   
+    //to save our changes in database
 
     return res.status(200).json({
         msg:"Song added to playlist"

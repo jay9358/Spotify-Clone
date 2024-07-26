@@ -33,7 +33,9 @@ router.post('/register',async (req,res)=>{
 
      const token=await getToken(email,newUser);
      const userToreturn = {...newUser.toJSON(),token};
+     console.log(userToreturn);
      delete userToreturn.password;
+
 
      return res.status(200).json({
           message:"user created successfully",
