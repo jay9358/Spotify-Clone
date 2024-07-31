@@ -51,7 +51,7 @@ function App() {
                                 path="/playlist/:playlistId"
                                 element={<SinglePlaylistView />}
                             />
-                            <Route path="*" element={<Navigate to="/home" />} />
+                            <Route path="*" element={<Navigate to="/login" />} />
                         </Routes>
                     </songContext.Provider>
                 ) : (
