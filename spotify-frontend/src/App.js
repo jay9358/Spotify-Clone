@@ -35,7 +35,7 @@ function App() {
                         }}
                     >
                         <Routes>
-                            <Route path="/" element={<HelloComponent />} />
+                            <Route path="/" element={<Navigate to="/home" />}/>
                             <Route
                                 path="/home"
                                 element={<LoggedInHomeComponent />}
@@ -51,7 +51,7 @@ function App() {
                                 path="/playlist/:playlistId"
                                 element={<SinglePlaylistView />}
                             />
-                            <Route path="*" element={<Navigate to="/login" />} />
+                            <Route path="*" element={<Navigate to="/home" />} />
                         </Routes>
                     </songContext.Provider>
                 ) : (
