@@ -5,7 +5,7 @@ const app=express();
 const port = 8080;
 
 app.use(cors({
-    origin: 'http://spotify-clone-74i6.vercel.app/', // Adjust as needed
+    origin: 'https://spotify-clone-74i6.vercel.app/', // Adjust as needed
   }));
 
 app.use(express.json());
